@@ -1,0 +1,1 @@
+include ':app','module_android_xcore:xcore-library:xcore'
