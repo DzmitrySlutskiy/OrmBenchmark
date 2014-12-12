@@ -8,12 +8,14 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
+import android.os.Build;
+import android.provider.BaseColumns;
 
 public class NoOrmSQLiteHelper extends SQLiteOpenHelper {
 
-	static final class EntityTable {
+	static final class EntityTable implements BaseColumns {
 		static final String TABLE = "entity";
-		static final String ID = "id";
+		static final String ID = BaseColumns._ID;
 		static final String FIELD_1 = "field1";
 		static final String FIELD_2 = "field2";
 		static final String BLOB = "blob";
@@ -50,11 +52,13 @@ public class NoOrmSQLiteHelper extends SQLiteOpenHelper {
 	public void insertInTransaction(List<NoOrmEntity> entities) {
 		SQLiteDatabase db = getWritableDatabase();
 		try {
-			db.beginTransaction();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                db.beginTransactionNonExclusive();
+            } else {
+                db.beginTransaction();
+            }
 			for (NoOrmEntity entity : entities) {
-				insertStatement.clearBindings();
-				entity.bindToStatement(insertStatement);
-				insertStatement.executeInsert();
+				insert(entity);
 			}
 			db.setTransactionSuccessful();
 		} finally {
