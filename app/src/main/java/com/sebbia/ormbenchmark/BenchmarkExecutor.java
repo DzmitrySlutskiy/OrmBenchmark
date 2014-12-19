@@ -17,6 +17,7 @@ import com.sebbia.ormbenchmark.activeandroid.sebbia.ActiveAndroidSebbiaBenchmark
 import com.sebbia.ormbenchmark.activeandroid.ActiveAndroidBenchmark;
 import com.sebbia.ormbenchmark.greendao.GreenDaoBenchmark;
 import com.sebbia.ormbenchmark.noorm.NoOrmBenchmark;
+import com.sebbia.ormbenchmark.ntv.NtvBenchmark;
 import com.sebbia.ormbenchmark.ormlite.OrmLiteBenchmark;
 import com.sebbia.ormbenchmark.sugarorm.SugarOrmBenchmark;
 import com.sebbia.ormbenchmark.utils.TimeMeasure;
@@ -25,12 +26,14 @@ import com.sebbia.ormbenchmark.xcore.XCoreBenchmark;
 public class BenchmarkExecutor {
 
 	public static Benchmark<?>[] BENCHMARKS = {
-			new NoOrmBenchmark(),
+            new NtvBenchmark(),
+            new NoOrmBenchmark(),
             new XCoreBenchmark(),
 			new GreenDaoBenchmark(),
 			new OrmLiteBenchmark(),
 			//new ActiveAndroidBenchmark(),
 			new SugarOrmBenchmark()
+
             //,
 			//new ActiveAndroidSebbiaBenchmark()
 	};
@@ -71,17 +74,18 @@ public class BenchmarkExecutor {
 						TimeMeasure loadEntities = new TimeMeasure(R.string.load_entities);
 						entities = benchmark.loadEntities();
 						results.add(loadEntities.end());
-	
-						TestCase.assertEquals(ENTITIES_COUNT, entities.size());
-						for (Object entity : entities) {
-							BenchmarkEntity benchmarkEntity = ((BenchmarkEntity) entity);
-							TestCase.assertEquals(100, benchmarkEntity.getField1().length());
-							TestCase.assertEquals(100, benchmarkEntity.getField2().length());
-							TestCase.assertNotNull(benchmarkEntity.getDate());
-							TestCase.assertEquals(100, benchmarkEntity.getBlob().getBackingArray().length);
-							TestCase.assertEquals(100, benchmarkEntity.getBlob().getField().length());
-						}
-	
+
+                        if (entities != null) {
+                            TestCase.assertEquals(ENTITIES_COUNT, entities.size());
+                            for (Object entity : entities) {
+                                BenchmarkEntity benchmarkEntity = ((BenchmarkEntity) entity);
+                                TestCase.assertEquals(100, benchmarkEntity.getField1().length());
+                                TestCase.assertEquals(100, benchmarkEntity.getField2().length());
+                                TestCase.assertNotNull(benchmarkEntity.getDate());
+                                TestCase.assertEquals(100, benchmarkEntity.getBlob().getBackingArray().length);
+                                TestCase.assertEquals(100, benchmarkEntity.getBlob().getField().length());
+                            }
+                        }
 						benchmark.dispose(BenchmarkApp.getInstance());
 					}
 					List<TimeMeasure> medianResults = new ArrayList<TimeMeasure>();
