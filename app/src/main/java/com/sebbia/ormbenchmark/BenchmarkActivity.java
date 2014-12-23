@@ -26,7 +26,6 @@ public class BenchmarkActivity extends Activity implements BenchmarkExecutorList
     private ListView resultsListView;
     private Button startButton;
     private BenchmarkExecutor executor;
-    DBHelper helper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

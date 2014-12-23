@@ -1,6 +1,7 @@
 package com.sebbia.ormbenchmark.ntv;
 
 import android.content.Context;
+import com.epam.database.DBHelper2;
 
 import com.sebbia.ormbenchmark.Benchmark;
 
@@ -12,16 +13,16 @@ import java.util.List;
  */
 public class NtvBenchmark extends Benchmark<NtvEntity> {
 
-    private DBHelper dbHelper;
+    private DBHelper2 dbHelper;
 
     @Override
     public void init(Context context) {
         super.init(context);
-        context.deleteDatabase("no_orm");
+//        context.deleteDatabase("no_orm");
 
         File file = context.getDatabasePath("dbntv");
         file.getParentFile().mkdirs();
-        dbHelper = new DBHelper();
+        dbHelper = new DBHelper2();
         dbHelper.openDB(file.getAbsolutePath());
         dbHelper.execSQL("CREATE TABLE IF NOT EXISTS entity (_id INTEGER PRIMARY KEY AUTOINCREMENT, field1 TEXT, field2 TEXT, blob BLOB, date INTEGER);");
     }
@@ -37,11 +38,13 @@ public class NtvBenchmark extends Benchmark<NtvEntity> {
         dbHelper.beginTran();
         for (int i = 0; i < entities.size(); i++) {
             NtvEntity ntvEntity = entities.get(i);
-            dbHelper.insertSQL(
-                    ntvEntity.getField1(),
-                    ntvEntity.getField2(),
-                    (int)ntvEntity.getDate().getTime()
-            );
+            Object[] args = new Object[4];
+            args[0] = ntvEntity.getField1();
+            args[1] = ntvEntity.getField2();
+            args[2] = ntvEntity.getBlob();
+            args[3] = ntvEntity.getDate();
+            dbHelper.executeForLastInsertedRowId(
+                    "INSERT INTO entity (field1, field2, blob, date)  VALUES (?,?,?,?)", args);
         }
         dbHelper.endTran();
     }
@@ -50,7 +53,6 @@ public class NtvBenchmark extends Benchmark<NtvEntity> {
     public List<NtvEntity> loadEntities() {
         return null;
     }
-
 
 
     @Override

@@ -17,3 +17,6 @@ allprojects {
         jcenter()
     }
 }
+// Ndk stuff. We have to explicitely manage our NDK dependencies
+ext.jniProjects = [project(':app')]//, project(':ndklib2'), project(':ndklib3')
+apply from: 'app/depend_ndk.gradle'
