@@ -23,7 +23,7 @@ public class OrmLiteBenchmark extends Benchmark<OrmLiteEntity> {
 	public void dispose(Context context) {
 		super.dispose(context);
 		DatabaseHelper.dispose();
-		context.deleteDatabase("ormlite");
+//		context.deleteDatabase("ormlite");
 	}
 
 	@Override

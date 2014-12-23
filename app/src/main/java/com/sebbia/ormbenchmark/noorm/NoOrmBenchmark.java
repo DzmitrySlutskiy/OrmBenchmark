@@ -21,7 +21,7 @@ public class NoOrmBenchmark extends Benchmark<NoOrmEntity> {
 	public void dispose(Context context) {
 		super.dispose(context);
 		sqLiteHelper.close();
-		context.deleteDatabase("no_orm");
+//		context.deleteDatabase("no_orm");
 	}
 
 	@Override

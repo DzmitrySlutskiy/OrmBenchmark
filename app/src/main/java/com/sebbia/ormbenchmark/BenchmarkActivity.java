@@ -11,7 +11,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sebbia.ormbenchmark.BenchmarkExecutor.BenchmarkExecutorListener;
-import com.sebbia.ormbenchmark.ntv.DBHelper;
 import com.sebbia.ormbenchmark.utils.TimeMeasure;
 
 import java.io.File;
@@ -26,6 +25,7 @@ public class BenchmarkActivity extends Activity implements BenchmarkExecutorList
     private ListView resultsListView;
     private Button startButton;
     private BenchmarkExecutor executor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

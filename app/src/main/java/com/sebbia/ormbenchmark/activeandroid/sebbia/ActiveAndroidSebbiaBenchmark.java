@@ -26,7 +26,7 @@ public class ActiveAndroidSebbiaBenchmark extends Benchmark<ActiveAndroidSebbiaE
 	public void dispose(Context context) {
 		super.dispose(context);
 		ActiveAndroid.dispose();
-		context.deleteDatabase("activeandroid_sebbia");
+//		context.deleteDatabase("activeandroid_sebbia");
 	}
 
 	@Override

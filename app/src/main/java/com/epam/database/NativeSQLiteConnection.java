@@ -3,6 +3,7 @@ package com.epam.database;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteBindOrColumnIndexOutOfRangeException;
+import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.util.Log;
 
@@ -18,21 +19,21 @@ import static android.database.Cursor.FIELD_TYPE_STRING;
  */
 public class NativeSQLiteConnection {
 
+    static {
+        System.loadLibrary("NativeSQLite");
+    }
+
     public static final String TAG = NativeSQLiteConnection.class.getSimpleName();
     // The native NativeSQLiteConnection pointer.  (FOR INTERNAL USE ONLY)
     private long mConnectionPtr;
 
 
-    public static NativeSQLiteConnection get(){
-        return new NativeSQLiteConnection();
-    }
-
-    private NativeSQLiteConnection() {
+    public NativeSQLiteConnection() {
         Log.d(TAG, "my NativeSQLiteConnection");
     }
 
     public void open(String path, String label) {
-        mConnectionPtr = nativeOpen(path, 0,
+        mConnectionPtr = nativeOpen(path, SQLiteDatabase.CREATE_IF_NECESSARY,
                 label,
                 Log.isLoggable("SQLiteStatements", Log.VERBOSE),
                 Log.isLoggable("SQLiteTime", Log.VERBOSE));

@@ -30,7 +30,7 @@ public class XCoreBenchmark extends Benchmark<BenchmarkModel> {
     @Override
     public void init(Context context) {
         super.init(context);
-        context.deleteDatabase("no_orm");
+//        context.deleteDatabase("no_orm");
         dbHelper = ContentProvider.getDBHelper(context);
         dbHelper.createTablesForModels(ContentProvider.ENTITIES);
     }

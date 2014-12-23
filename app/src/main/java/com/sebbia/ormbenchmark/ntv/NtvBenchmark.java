@@ -1,8 +1,8 @@
 package com.sebbia.ormbenchmark.ntv;
 
 import android.content.Context;
-import com.epam.database.DBHelper2;
 
+import com.epam.database.NativeSQLiteConnection;
 import com.sebbia.ormbenchmark.Benchmark;
 
 import java.io.File;
@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class NtvBenchmark extends Benchmark<NtvEntity> {
 
-    private DBHelper2 dbHelper;
+    private NativeSQLiteConnection dbConnection;
 
     @Override
     public void init(Context context) {
@@ -22,20 +22,22 @@ public class NtvBenchmark extends Benchmark<NtvEntity> {
 
         File file = context.getDatabasePath("dbntv");
         file.getParentFile().mkdirs();
-        dbHelper = new DBHelper2();
-        dbHelper.openDB(file.getAbsolutePath());
-        dbHelper.execSQL("CREATE TABLE IF NOT EXISTS entity (_id INTEGER PRIMARY KEY AUTOINCREMENT, field1 TEXT, field2 TEXT, blob BLOB, date INTEGER);");
+
+        dbConnection = new NativeSQLiteConnection();
+        dbConnection.open(file.getAbsolutePath(), "label");
+        dbConnection.execute("CREATE TABLE IF NOT EXISTS entity (_id INTEGER PRIMARY KEY AUTOINCREMENT, field1 TEXT, field2 TEXT, blob BLOB, date INTEGER);", null);
     }
 
     @Override
     public void dispose(Context context) {
         super.dispose(context);
 //        dbHelper.delete(TestEntity.class, null, null);
+        dbConnection.close();
     }
 
     @Override
     public void saveEntitiesInTransaction(List<NtvEntity> entities) {
-        dbHelper.beginTran();
+        dbConnection.execute("BEGIN;", null);
         for (int i = 0; i < entities.size(); i++) {
             NtvEntity ntvEntity = entities.get(i);
             Object[] args = new Object[4];
@@ -43,10 +45,10 @@ public class NtvBenchmark extends Benchmark<NtvEntity> {
             args[1] = ntvEntity.getField2();
             args[2] = ntvEntity.getBlob();
             args[3] = ntvEntity.getDate();
-            dbHelper.executeForLastInsertedRowId(
+            dbConnection.executeForLastInsertedRowId(
                     "INSERT INTO entity (field1, field2, blob, date)  VALUES (?,?,?,?)", args);
         }
-        dbHelper.endTran();
+        dbConnection.execute("COMMIT;", null);
     }
 
     @Override

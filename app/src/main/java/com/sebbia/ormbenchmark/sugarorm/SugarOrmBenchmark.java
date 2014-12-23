@@ -22,7 +22,7 @@ public class SugarOrmBenchmark extends Benchmark<SugarOrmEntity> {
 	public void dispose(Context context) {
 		super.dispose(context);
 		SugarContext.terminate();
-		context.deleteDatabase("sugarorm.db");
+//		context.deleteDatabase("sugarorm.db");
 	}
 
 	@Override

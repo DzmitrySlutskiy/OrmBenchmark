@@ -29,7 +29,7 @@ public class ActiveAndroidBenchmark extends Benchmark<ActiveAndroidEntity> {
 	public void dispose(Context context) {
 		super.dispose(context);
 		ActiveAndroid.dispose();
-		context.deleteDatabase("activeandroid");
+//		context.deleteDatabase("activeandroid");
 	}
 
 	@Override

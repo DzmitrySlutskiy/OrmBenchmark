@@ -26,7 +26,7 @@ public class GreenDaoBenchmark extends Benchmark<GreenDaoEntity> {
 	@Override
 	public void dispose(Context context) {
 		super.dispose(context);
-		context.deleteDatabase("greendao");
+//		context.deleteDatabase("greendao");
 		daoSession.clear();
 	}
 
