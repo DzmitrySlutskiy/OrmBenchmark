@@ -214,7 +214,7 @@ JNIEXPORT jlong JNICALL Java_com_epam_database_NativeSQLiteConnection_nativePrep
         return 0;
     }
 
-    ALOGV("Prepared statement %p on connection %p", statement, connection->db);
+//    ALOGV("Prepared statement %p on connection %p", statement, connection->db);
     return reinterpret_cast<jlong>(statement);
 }
 
@@ -226,7 +226,7 @@ JNIEXPORT void JNICALL Java_com_epam_database_NativeSQLiteConnection_nativeFinal
     // We ignore the result of sqlite3_finalize because it is really telling us about
     // whether any errors occurred while executing the statement.  The statement itself
     // is always finalized regardless.
-    ALOGV("Finalized statement %p on connection %p", statement, connection->db);
+//    ALOGV("Finalized statement %p on connection %p", statement, connection->db);
     sqlite3_finalize(statement);
 }
 

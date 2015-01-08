@@ -50,6 +50,7 @@ public class NativeSQLiteConnection {
         }
     }
 
+
     public long executeForLastInsertedRowId(String sql, Object[] bindArgs) {
         if (sql == null) {
             throw new IllegalArgumentException("sql must not be null.");
