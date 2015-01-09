@@ -30,11 +30,11 @@ public class BenchmarkExecutor {
             new NtvSelfBenchmark(),
             new NtvBenchmark(),
             new NoOrmBenchmark(),
-            new XCoreBenchmark(),
-			new GreenDaoBenchmark(),
-			new OrmLiteBenchmark(),
+            new XCoreBenchmark()//,
+//			new GreenDaoBenchmark(),
+//			new OrmLiteBenchmark(),
 			//new ActiveAndroidBenchmark(),
-			new SugarOrmBenchmark()
+//			new SugarOrmBenchmark()
 
             //,
 			//new ActiveAndroidSebbiaBenchmark()

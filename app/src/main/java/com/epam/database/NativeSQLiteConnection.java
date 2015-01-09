@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.util.Log;
 
+import java.util.Locale;
+
 import static android.database.Cursor.FIELD_TYPE_BLOB;
 import static android.database.Cursor.FIELD_TYPE_FLOAT;
 import static android.database.Cursor.FIELD_TYPE_INTEGER;
@@ -122,13 +124,47 @@ public class NativeSQLiteConnection {
         recyclePreparedStatement(statement);
     }
 
+    public static int getSqlStatementType(String sql) {
+        sql = sql.trim();
+        if (sql.length() < 3) {
+            return DatabaseUtils.STATEMENT_OTHER;
+        }
+        String prefixSql = sql.substring(0, 3).toUpperCase(Locale.ROOT);
+        if (prefixSql.equals("SEL")) {
+            return DatabaseUtils.STATEMENT_SELECT;
+        } else if (prefixSql.equals("INS") ||
+                prefixSql.equals("UPD") ||
+                prefixSql.equals("REP") ||
+                prefixSql.equals("DEL")) {
+            return DatabaseUtils.STATEMENT_UPDATE;
+        } else if (prefixSql.equals("ATT")) {
+            return DatabaseUtils.STATEMENT_ATTACH;
+        } else if (prefixSql.equals("COM")) {
+            return DatabaseUtils.STATEMENT_COMMIT;
+        } else if (prefixSql.equals("END")) {
+            return DatabaseUtils.STATEMENT_COMMIT;
+        } else if (prefixSql.equals("ROL")) {
+            return DatabaseUtils.STATEMENT_ABORT;
+        } else if (prefixSql.equals("BEG")) {
+            return DatabaseUtils.STATEMENT_BEGIN;
+        } else if (prefixSql.equals("PRA")) {
+            return DatabaseUtils.STATEMENT_PRAGMA;
+        } else if (prefixSql.equals("CRE") || prefixSql.equals("DRO") ||
+                prefixSql.equals("ALT")) {
+            return DatabaseUtils.STATEMENT_DDL;
+        } else if (prefixSql.equals("ANA") || prefixSql.equals("DET")) {
+            return DatabaseUtils.STATEMENT_UNPREPARED;
+        }
+        return DatabaseUtils.STATEMENT_OTHER;
+    }
+
     private PreparedStatement acquirePreparedStatement(String sql) {
         PreparedStatement statement = null;
 
         final long statementPtr = nativePrepareStatement(mConnectionPtr, sql);
         try {
             final int numParameters = nativeGetParameterCount(mConnectionPtr, statementPtr);
-            final int type = DatabaseUtils.getSqlStatementType(sql);
+            final int type = getSqlStatementType(sql);
             final boolean readOnly = nativeIsReadOnly(mConnectionPtr, statementPtr);
             statement = obtainPreparedStatement(sql, statementPtr, numParameters, type, readOnly);
 
