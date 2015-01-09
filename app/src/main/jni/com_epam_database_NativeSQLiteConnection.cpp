@@ -31,22 +31,22 @@
 #include <arpa/inet.h>
 #include <string.h>
 #include <string>
-#include <sqlite3.h>
-#include "SQLiteCommon.h"
+#include "include/sqlite3.h"
+#include "include/SQLiteCommon.h"
 //#include <utils/String8.h>
 
-#include "com_epam_database_NativeSQLiteConnection.h"
+#include "include/com_epam_database_NativeSQLiteConnection.h"
 
 using namespace std;
 using namespace android;
 
-#define LOG_TAG    "Log From JNI"
-#define LOGI(x...) __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG,x)
-#define ALOG(...)  __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
-#define ALOGV(...)  __android_log_print(ANDROID_LOG_VERBOSE,LOG_TAG,__VA_ARGS__)
-#define ALOGE(...)  __android_log_print(ANDROID_LOG_ERROR,LOG_TAG,__VA_ARGS__)
-#define ALOGW(...)  __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
-//#define LOG_WINDOW(...)  ALOGW(__VA_ARGS__)
+#define LOCAL_LOG_TAG    "NativeSQLiteConnection"
+#define A_LOGI(x...) __android_log_print(ANDROID_LOG_DEBUG, LOCAL_LOG_TAG,x)
+#define A_LOG(...)  __android_log_print(ANDROID_LOG_INFO,LOCAL_LOG_TAG,__VA_ARGS__)
+#define A_LOGV(...)  __android_log_print(ANDROID_LOG_VERBOSE,LOCAL_LOG_TAG,__VA_ARGS__)
+#define A_LOGE(...)  __android_log_print(ANDROID_LOG_ERROR,LOCAL_LOG_TAG,__VA_ARGS__)
+#define A_LOGW(...)  __android_log_print(ANDROID_LOG_INFO,LOCAL_LOG_TAG,__VA_ARGS__)
+#define LOG_WINDOW(...)  A_LOGW(__VA_ARGS__)
 // Set to 1 to use UTF16 storage for localized indexes.
 #define UTF16_STORAGE 0
 
@@ -88,14 +88,14 @@ struct SQLiteConnection {
 // Called each time a statement begins execution, when tracing is enabled.
 void sqliteTraceCallback(void *data, const char *sql) {
     SQLiteConnection* connection = static_cast<SQLiteConnection*>(data);
-    ALOG("%s: \"%s\"\n",
+    A_LOG("%s: \"%s\"\n",
             connection->label.c_str(), sql);
 }
 
 // Called each time a statement finishes execution, when profiling is enabled.
 void sqliteProfileCallback(void *data, const char *sql, sqlite3_uint64 tm) {
     SQLiteConnection* connection = static_cast<SQLiteConnection*>(data);
-    ALOG( "%s: \"%s\" took %0.3f ms\n",
+    A_LOG( "%s: \"%s\" took %0.3f ms\n",
             connection->label.c_str(), sql, tm * 0.000001f);
 }
 
@@ -166,7 +166,7 @@ JNIEXPORT jlong JNICALL Java_com_epam_database_NativeSQLiteConnection_nativeOpen
         sqlite3_profile(db, &sqliteProfileCallback, connection);
     }
 
-    ALOGV("Opened connection %p with label '%s'", db, label.c_str());
+    A_LOGV("Opened connection %p with label '%s'", db, label.c_str());
     return reinterpret_cast<jlong>(connection);
 }
 
@@ -174,11 +174,11 @@ JNIEXPORT void JNICALL Java_com_epam_database_NativeSQLiteConnection_nativeClose
     SQLiteConnection* connection = reinterpret_cast<SQLiteConnection*>(connectionPtr);
 
     if (connection) {
-        ALOGV("Closing connection %p", connection->db);
+        A_LOGV("Closing connection %p", connection->db);
         int err = sqlite3_close(connection->db);
         if (err != SQLITE_OK) {
             // This can happen if sub-objects aren't closed first.  Make sure the caller knows.
-            ALOGE("sqlite3_close(%p) failed: %d", connection->db, err);
+            A_LOGE("sqlite3_close(%p) failed: %d", connection->db, err);
             throw_sqlite3_exception(env, connection->db, "Count not close db.");
             return;
         }
@@ -214,7 +214,7 @@ JNIEXPORT jlong JNICALL Java_com_epam_database_NativeSQLiteConnection_nativePrep
         return 0;
     }
 
-//    ALOGV("Prepared statement %p on connection %p", statement, connection->db);
+//    A_LOGV("Prepared statement %p on connection %p", statement, connection->db);
     return reinterpret_cast<jlong>(statement);
 }
 
@@ -226,7 +226,7 @@ JNIEXPORT void JNICALL Java_com_epam_database_NativeSQLiteConnection_nativeFinal
     // We ignore the result of sqlite3_finalize because it is really telling us about
     // whether any errors occurred while executing the statement.  The statement itself
     // is always finalized regardless.
-//    ALOGV("Finalized statement %p on connection %p", statement, connection->db);
+//    A_LOGV("Finalized statement %p on connection %p", statement, connection->db);
     sqlite3_finalize(statement);
 }
 

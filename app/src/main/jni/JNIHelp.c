@@ -18,8 +18,8 @@
  * JNI helper functions.
  */
 #define LOG_TAG "JNIHelp"
-#include "JNIHelp.h"
-#include "utils/Log.h"
+#include "include/JNIHelp.h"
+#include "include/utils/Log.h"
 
 #include <stdlib.h>
 #include <string.h>

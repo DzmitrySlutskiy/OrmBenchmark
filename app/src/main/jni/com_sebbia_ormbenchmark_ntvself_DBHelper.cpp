@@ -30,20 +30,20 @@
 #include <arpa/inet.h>
 #include <string.h>
 #include <string>
-#include <sqlite3.h>
-#include "SQLiteCommon.h"
+#include "include/sqlite3.h"
+#include "include/SQLiteCommon.h"
 
-#include "com_sebbia_ormbenchmark_ntvself_DBHelper.h"
+#include "include/com_sebbia_ormbenchmark_ntvself_DBHelper.h"
 
 using namespace std;
 using namespace android;
 
-#define LOG_TAG    "DBHelperNative"
-#define LOGI(x...) __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG,x)
-#define ALOG(...)  __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
-#define ALOGV(...)  __android_log_print(ANDROID_LOG_VERBOSE,LOG_TAG,__VA_ARGS__)
-#define ALOGE(...)  __android_log_print(ANDROID_LOG_ERROR,LOG_TAG,__VA_ARGS__)
-#define ALOGW(...)  __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
+//#define LOG_TAG    "DBHelperNative"
+//#define LOGI(x...) __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG,x)
+//#define ALOG(...)  __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
+//#define ALOGV(...)  __android_log_print(ANDROID_LOG_VERBOSE,LOG_TAG,__VA_ARGS__)
+//#define ALOGE(...)  __android_log_print(ANDROID_LOG_ERROR,LOG_TAG,__VA_ARGS__)
+//#define ALOGW(...)  __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
 //#define LOG_WINDOW(...)  ALOGW(__VA_ARGS__)
 // Set to 1 to use UTF16 storage for localized indexes.
 #define UTF16_STORAGE 0
@@ -51,7 +51,8 @@ using namespace android;
 /*---------------------------------  ---------------------------------*/
 sqlite3* db;
 sqlite3_stmt *pStmt = 0;
-int index = 0;
+
+int bindIndex = 0;
 /*com_sebbia_ormbenchmark_ntvself_DBHelper_
 /*com_sebbia_ormbenchmark_ntvself_DBHelper_*/
 
@@ -89,7 +90,7 @@ JNIEXPORT void JNICALL Java_com_sebbia_ormbenchmark_ntvself_DBHelper_prepareStat
     env->ReleaseStringUTFChars(sqlStr, valChars);
 
     int rc = sqlite3_prepare(db, valueStr.c_str(), -1, &pStmt, 0);
-    index = 0;
+    bindIndex = 0;
 //    if( rc!=SQLITE_OK ){
 //        return;
 //    }
@@ -98,7 +99,7 @@ JNIEXPORT void JNICALL Java_com_sebbia_ormbenchmark_ntvself_DBHelper_prepareStat
 JNIEXPORT void JNICALL Java_com_sebbia_ormbenchmark_ntvself_DBHelper_execStatement(JNIEnv* env, jclass clazz ) {
     sqlite3_step(pStmt);
     sqlite3_finalize(pStmt);
-    index = 0;
+    bindIndex = 0;
 }
 
 //char bindings[9216];
@@ -115,7 +116,7 @@ JNIEXPORT void JNICALL Java_com_sebbia_ormbenchmark_ntvself_DBHelper_nativeBindI
     }
     strcat(bindings, str);*/
 
-    sqlite3_bind_int(pStmt, ++index, value);
+    sqlite3_bind_int(pStmt, ++bindIndex, value);
 //    sqlite3_bind_int64(pStmt, 1, zKey, -1, SQLITE_STATIC);
 }
 
@@ -127,7 +128,7 @@ JNIEXPORT void JNICALL Java_com_sebbia_ormbenchmark_ntvself_DBHelper_nativeBindL
     }
     strcat(bindings, str);*/
 
-    sqlite3_bind_int64(pStmt, ++index, value);
+    sqlite3_bind_int64(pStmt, ++bindIndex, value);
 //    sqlite3_bind_int64(pStmt, 1, zKey, -1, SQLITE_STATIC);
 }
 
@@ -146,7 +147,7 @@ JNIEXPORT void JNICALL Java_com_sebbia_ormbenchmark_ntvself_DBHelper_nativeBindS
     string valueStr(valChars);
     env->ReleaseStringUTFChars(value, valChars);
 
-    sqlite3_bind_text(pStmt, ++index, valueStr.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(pStmt, ++bindIndex, valueStr.c_str(), -1, SQLITE_STATIC);
 }
 
 JNIEXPORT void JNICALL Java_com_sebbia_ormbenchmark_ntvself_DBHelper_nativeBindBlob(JNIEnv* env, jclass clazz, jbyteArray valueArray, jint size) {
@@ -164,5 +165,5 @@ JNIEXPORT void JNICALL Java_com_sebbia_ormbenchmark_ntvself_DBHelper_nativeBindB
 
     b[textLength] = '\0';
 
-    sqlite3_bind_blob(pStmt, ++index, b, textLength, SQLITE_STATIC);
+    sqlite3_bind_blob(pStmt, ++bindIndex, b, textLength, SQLITE_STATIC);
 }

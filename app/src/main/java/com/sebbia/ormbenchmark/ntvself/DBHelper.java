@@ -10,7 +10,7 @@ import java.util.Date;
  */
 public class DBHelper {
     static {
-        System.loadLibrary("NativeSQLite");
+        System.loadLibrary("nativesqlite");
     }
 
     public void open(String path, String label) {

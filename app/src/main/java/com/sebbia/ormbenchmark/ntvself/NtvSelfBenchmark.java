@@ -21,7 +21,7 @@ public class NtvSelfBenchmark extends Benchmark<NtvSelfEntity> {
         super.init(context);
 //        context.deleteDatabase("no_orm");
 
-        File file = context.getDatabasePath("dbntv2");
+        File file = context.getDatabasePath("NTVSelf");
         file.getParentFile().mkdirs();
 
         helper = new DBHelper();

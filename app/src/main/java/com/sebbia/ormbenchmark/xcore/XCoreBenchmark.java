@@ -38,7 +38,7 @@ public class XCoreBenchmark extends Benchmark<BenchmarkModel> {
     @Override
     public void dispose(Context context) {
         super.dispose(context);
-        dbHelper.delete(TestEntity.class, null, null);
+//        dbHelper.delete(TestEntity.class, null, null);
     }
 
     @Override

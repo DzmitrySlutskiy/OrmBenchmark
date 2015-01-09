@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "SQLiteCommon.h"
+#include "include/SQLiteCommon.h"
 
 #include <string.h>
 #include <string>

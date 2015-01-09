@@ -12,13 +12,14 @@ android {
         versionName "1.0"
 
         ndk{
-            moduleName "NativeSQLite"
+            moduleName "nativesqlite"
             stl "stlport_static"
             ldLibs "log"
+            cFlags "-DANDROID_NDK"
         }
     }
 
-    /*productFlavors {
+    productFlavors {
         x86 {
 
             ndk{
@@ -27,38 +28,25 @@ android {
             // this is the flavor part of the version code.
             // It must be higher than the arm one for devices supporting
             // both, as x86 is preferred.
-            versionCode = 3
+
         }
         arm {
 
             ndk{
                 abiFilter "armeabi-v7a"
             }
-            versionCode = 1
+
         }
         mips {
-
             // It must be higher than the arm one for devices supporting
             // both, as mips is preferred.
             ndk{
                 abiFilter "mips"
             }
-            versionCode = 2
-        }
-        fat {
 
-            versionCode = 0
         }
+        fat
     }
-
-    // make per-variant version code
-    applicationVariants.all { variant ->
-        // get the version code of each flavor
-        def abiVersion = variant.productFlavors.get(0).versionCode
-
-        // set the composite code
-        variant.mergedFlavor.versionCode = abiVersion * 1000000 + defaultConfig.versionCode
-    }*/
 
     buildTypes {
         release {
@@ -68,8 +56,9 @@ android {
     }
 
     sourceSets.main {
+//        jniLibs.srcDir 'src/main/jniLibs'
         jniLibs.srcDir 'src/main/libs'
-//        jni.srcDirs = [] //disable automatic ndk-build call
+        jni.srcDirs = [] //disable automatic ndk-build call
     }
 }
 

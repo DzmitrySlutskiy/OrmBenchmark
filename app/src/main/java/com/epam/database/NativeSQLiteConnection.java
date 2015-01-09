@@ -22,7 +22,8 @@ import static android.database.Cursor.FIELD_TYPE_STRING;
 public class NativeSQLiteConnection {
 
     static {
-        System.loadLibrary("NativeSQLite");
+        System.loadLibrary("nativesqlite");
+        System.loadLibrary("sqlite3");
     }
 
     public static final String TAG = NativeSQLiteConnection.class.getSimpleName();

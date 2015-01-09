@@ -1,30 +1,40 @@
-# Copyright (C) 2009 The Android Open Source Project
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#      http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
+##############################################################################
+#               SQLite3 module
+##############################################################################
 LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 
-LOCAL_MODULE    := NativeSQLite
-LOCAL_SRC_FILES := com_epam_database_NativeSQLiteConnection.cpp
+include $(CLEAR_VARS)
+LOCAL_MODULE    := sqlite3
+LOCAL_SRC_FILES := ../jnilibs_/$(TARGET_ARCH_ABI)/libsqlite3.so
+LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)/../include
+include $(PREBUILT_SHARED_LIBRARY)
 
-include $(BUILD_STATIC_LIBRARY)
+##############################################################################
+#               NativeSQLite module
+##############################################################################
 
-#LOCAL_LDLIBS := -L$(SYSROOT)/usr/lib -llog -lz -lm -landroid -lrt -ldl $(LIB_PATH) -lxtract -latomic -lutils
-#LOCAL_LDLIBS := -llog -lz -lm -landroid -lrt -ldl -lxtract -latomic -lutils
+include $(CLEAR_VARS)
+LOCAL_PATH := $(call my-dir)
+LOCAL_MODULE := nativesqlite
+LOCAL_SRC_FILES := \
+	D:\work\projects\OrmBench\app\src\main\jni\com_epam_database_NativeSQLiteConnection.cpp \
+	D:\work\projects\OrmBench\app\src\main\jni\com_sebbia_ormbenchmark_ntvself_DBHelper.cpp \
+	D:\work\projects\OrmBench\app\src\main\jni\empty.c \
+	D:\work\projects\OrmBench\app\src\main\jni\JNIHelp.c \
+	D:\work\projects\OrmBench\app\src\main\jni\SQLiteCommon.cpp \
+
+LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)/../include
+
+LOCAL_LDFLAGS := -L$(LOCAL_PATH)/../jnilibs_/$(TARGET_ARCH_ABI)/
+LOCAL_C_INCLUDES += $(LOCAL_PATH)/../include
+LOCAL_LDLIBS := -ldl -llog -lz -lm -landroid
+LOCAL_SHARED_LIBRARIES := sqlite3
 
 #LOCAL_CFLAGS += -DHAVE_SYS_UIO_H
 #LOCAL_CPP_FEATURES += exceptions
 
-LOCAL_STATIC_LIBRARIES :=  libutils \
-                    	libcutils
+
+#LOCAL_STATIC_LIBRARIES :=  libutils \
+#                    	libcutils
+include $(BUILD_SHARED_LIBRARY)
