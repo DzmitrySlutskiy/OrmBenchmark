@@ -19,6 +19,7 @@ import com.sebbia.ormbenchmark.greendao.GreenDaoBenchmark;
 import com.sebbia.ormbenchmark.noorm.NoOrmBenchmark;
 import com.sebbia.ormbenchmark.ntv.NtvBenchmark;
 import com.sebbia.ormbenchmark.ntvself.NtvSelfBenchmark;
+import com.sebbia.ormbenchmark.ntvstr.NtvStrBenchmark;
 import com.sebbia.ormbenchmark.ormlite.OrmLiteBenchmark;
 import com.sebbia.ormbenchmark.sugarorm.SugarOrmBenchmark;
 import com.sebbia.ormbenchmark.utils.TimeMeasure;
@@ -27,6 +28,7 @@ import com.sebbia.ormbenchmark.xcore.XCoreBenchmark;
 public class BenchmarkExecutor {
 
 	public static Benchmark<?>[] BENCHMARKS = {
+            new NtvStrBenchmark(),
             new NtvSelfBenchmark(),
             new NtvBenchmark(),
             new NoOrmBenchmark(),

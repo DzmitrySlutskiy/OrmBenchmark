@@ -20,6 +20,7 @@ LOCAL_MODULE := nativesqlite
 LOCAL_SRC_FILES := \
 	D:\work\projects\OrmBench\app\src\main\jni\com_epam_database_NativeSQLiteConnection.cpp \
 	D:\work\projects\OrmBench\app\src\main\jni\com_sebbia_ormbenchmark_ntvself_DBHelper.cpp \
+	D:\work\projects\OrmBench\app\src\main\jni\com_sebbia_ormbenchmark_ntvstr_DBHelper.cpp \
 	D:\work\projects\OrmBench\app\src\main\jni\empty.c \
 	D:\work\projects\OrmBench\app\src\main\jni\JNIHelp.c \
 	D:\work\projects\OrmBench\app\src\main\jni\SQLiteCommon.cpp \
