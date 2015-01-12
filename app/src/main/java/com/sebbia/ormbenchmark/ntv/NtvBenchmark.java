@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.epam.database.NativeSQLiteConnection;
 import com.sebbia.ormbenchmark.Benchmark;
+import com.sebbia.ormbenchmark.utils.Utils;
 
 import java.io.File;
 import java.util.List;
@@ -13,14 +14,15 @@ import java.util.List;
  */
 public class NtvBenchmark extends Benchmark<NtvEntity> {
 
+    public static final String DB_NAME = "dbntv";
     private NativeSQLiteConnection dbConnection;
 
     @Override
     public void init(Context context) {
         super.init(context);
-//        context.deleteDatabase("no_orm");
 
-        File file = context.getDatabasePath("dbntv");
+        context.deleteDatabase(DB_NAME);
+        File file = context.getDatabasePath(DB_NAME);
         file.getParentFile().mkdirs();
 
         dbConnection = new NativeSQLiteConnection();
@@ -43,7 +45,7 @@ public class NtvBenchmark extends Benchmark<NtvEntity> {
             Object[] args = new Object[4];
             args[0] = ntvEntity.getField1();
             args[1] = ntvEntity.getField2();
-            args[2] = ntvEntity.getBlob();
+            args[2] = Utils.serialize(ntvEntity.getBlob());
             args[3] = ntvEntity.getDate();
             dbConnection.executeForLastInsertedRowId(
                     "INSERT INTO entity (field1, field2, blob, date)  VALUES (?,?,?,?)", args);

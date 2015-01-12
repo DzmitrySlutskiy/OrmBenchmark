@@ -109,61 +109,28 @@ JNIEXPORT void JNICALL Java_com_sebbia_ormbenchmark_ntvself_DBHelper_nativeRelea
 }
 
 JNIEXPORT void JNICALL Java_com_sebbia_ormbenchmark_ntvself_DBHelper_nativeBindInt(JNIEnv* env, jclass clazz, jint value) {
-    /*char str[11];
-    sprintf(str, "%d", value);
-    if (strlen(bindings) > 0){
-        strcat(bindings, ",");
-    }
-    strcat(bindings, str);*/
 
     sqlite3_bind_int(pStmt, ++bindIndex, value);
 //    sqlite3_bind_int64(pStmt, 1, zKey, -1, SQLITE_STATIC);
 }
 
 JNIEXPORT void JNICALL Java_com_sebbia_ormbenchmark_ntvself_DBHelper_nativeBindLong(JNIEnv* env, jclass clazz, jlong value) {
-    /*char str[11];
-    sprintf(str, "%d", value);
-    if (strlen(bindings) > 0){
-        strcat(bindings, ",");
-    }
-    strcat(bindings, str);*/
 
     sqlite3_bind_int64(pStmt, ++bindIndex, value);
-//    sqlite3_bind_int64(pStmt, 1, zKey, -1, SQLITE_STATIC);
 }
 
-JNIEXPORT void JNICALL Java_com_sebbia_ormbenchmark_ntvself_DBHelper_nativeBindString(JNIEnv* env, jclass clazz, jstring value) {
-    /*const char* valChars = env->GetStringUTFChars(value, NULL);
-    string valueStr(valChars);
-    env->ReleaseStringUTFChars(value, valChars);
-
-    if (strlen(bindings) > 0){
-        strcat(bindings, ",");
-    }
-    strcat(bindings, "'");
-    strcat(bindings, valueStr.c_str());
-    strcat(bindings, "'");*/
-    const char* valChars = env->GetStringUTFChars(value, NULL);
-    string valueStr(valChars);
-    env->ReleaseStringUTFChars(value, valChars);
-
-    sqlite3_bind_text(pStmt, ++bindIndex, valueStr.c_str(), -1, SQLITE_STATIC);
+JNIEXPORT void JNICALL Java_com_sebbia_ormbenchmark_ntvself_DBHelper_nativeBindString(JNIEnv* env, jclass clazz, jstring valueString) {
+    jsize valueLength = env->GetStringLength(valueString);
+    const jchar* value = env->GetStringCritical(valueString, NULL);
+    int err = sqlite3_bind_text16(pStmt, ++bindIndex, value, valueLength * sizeof(jchar),
+            SQLITE_TRANSIENT);
+    env->ReleaseStringCritical(valueString, value);
 }
 
 JNIEXPORT void JNICALL Java_com_sebbia_ormbenchmark_ntvself_DBHelper_nativeBindBlob(JNIEnv* env, jclass clazz, jbyteArray valueArray, jint size) {
 
-//    jsize valueLength = env->GetArrayLength(valueArray);
-//    jbyte* value = static_cast<jbyte*>(env->GetPrimitiveArrayCritical(valueArray, NULL));
-
-    jboolean isCopy;
-    jbyte* a = env->GetByteArrayElements(valueArray,&isCopy);
-
-    int textLength = strlen((const char*)a);
-    char* b = (char*) malloc(textLength + 1);
-    memcpy(b, a, textLength);
-    env->ReleaseByteArrayElements(valueArray, a, JNI_ABORT);
-
-    b[textLength] = '\0';
-
-    sqlite3_bind_blob(pStmt, ++bindIndex, b, textLength, SQLITE_STATIC);
+    jsize valueLength = env->GetArrayLength(valueArray);
+    jbyte* value = static_cast<jbyte*>(env->GetPrimitiveArrayCritical(valueArray, NULL));
+    int err = sqlite3_bind_blob(pStmt, ++bindIndex, value, valueLength, SQLITE_TRANSIENT);
+    env->ReleasePrimitiveArrayCritical(valueArray, value, JNI_ABORT);
 }

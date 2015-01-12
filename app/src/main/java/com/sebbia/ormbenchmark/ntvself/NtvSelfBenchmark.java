@@ -2,9 +2,8 @@ package com.sebbia.ormbenchmark.ntvself;
 
 import android.content.Context;
 
-import com.epam.database.NativeSQLiteConnection;
 import com.sebbia.ormbenchmark.Benchmark;
-import com.sebbia.ormbenchmark.utils.Log;
+import com.sebbia.ormbenchmark.utils.Utils;
 
 import java.io.File;
 import java.util.List;
@@ -14,14 +13,15 @@ import java.util.List;
  */
 public class NtvSelfBenchmark extends Benchmark<NtvSelfEntity> {
 
-//    private NativeSQLiteConnection dbConnection;
+    public static final String DB_NAME = "NTVSelf";
+    //    private NativeSQLiteConnection dbConnection;
     private DBHelper helper;
     @Override
     public void init(Context context) {
         super.init(context);
-//        context.deleteDatabase("no_orm");
+        context.deleteDatabase(DB_NAME);
 
-        File file = context.getDatabasePath("NTVSelf");
+        File file = context.getDatabasePath(DB_NAME);
         file.getParentFile().mkdirs();
 
         helper = new DBHelper();
@@ -73,7 +73,7 @@ public class NtvSelfBenchmark extends Benchmark<NtvSelfEntity> {
 
     @Override
     public String getName() {
-        return "NTVSelf";
+        return DB_NAME;
     }
 
     @Override

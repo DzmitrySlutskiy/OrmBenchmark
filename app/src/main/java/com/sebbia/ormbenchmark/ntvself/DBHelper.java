@@ -1,6 +1,7 @@
 package com.sebbia.ormbenchmark.ntvself;
 
 import com.sebbia.ormbenchmark.Blob;
+import com.sebbia.ormbenchmark.utils.Utils;
 
 import java.util.Date;
 
@@ -50,7 +51,7 @@ public class DBHelper {
             } else if (value instanceof Long) {
                 nativeBindLong((Long) value);
             } else if (value instanceof Blob) {
-                byte[] blobArray = ((Blob) value).getBackingArray();
+                byte[] blobArray = Utils.serialize(((Blob) value));
                 nativeBindBlob(blobArray, blobArray.length);
             } else if (value instanceof Date) {
                 nativeBindLong(((Date) value).getTime());
